@@ -49,7 +49,7 @@
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/knowledge-graph-analysis.git
+git clone https://github.com/srikanth-thirumani/knowledge-graph-analysis.git
 cd knowledge-graph-analysis
 ```
 
@@ -85,7 +85,8 @@ python app.py
 
 ## 📸 Screenshots
 
-*[Screenshots to be added]*
+![image](https://github.com/user-attachments/assets/a746293a-19fa-4a63-9a3e-a88cb98686a8)
+
 
 ## 🤝 Contributing
 
