@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: app.py
+    env: python
+    plan: free
+    timeout: 180  # Increase from default 30s to 180s
