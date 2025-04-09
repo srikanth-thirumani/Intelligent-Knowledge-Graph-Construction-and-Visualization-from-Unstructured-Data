@@ -13,6 +13,7 @@ import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.platypus.flowables import KeepTogether
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO
@@ -31,8 +32,14 @@ from plotly.subplots import make_subplots
 import numpy as np
 import threading
 from sklearn.feature_extraction.text import TfidfVectorizer
-from youtube_transcript_api import YouTubeTranscriptApi 
-import pyLDAvis.gensim_models
+from youtube_transcript_api import YouTubeTranscriptApi
+import nltk
+from matplotlib import colormaps
+import textwrap
+
+# Initialize NLTK data
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 app = Flask(__name__)
 
@@ -452,13 +459,32 @@ Now generate the relationships:
             return None
 
     def generate_wordcloud(self, text):
-        """Generate wordcloud visualization"""
-        wordcloud = WordCloud(width=800, height=400, 
-                             background_color='white').generate(text)
-        plt.figure(figsize=(8, 5))
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis('off')
-        return self._save_plot()
+        """Generate wordcloud visualization with updated colormap handling"""
+        try:
+            # Create WordCloud with modern colormap syntax
+            wordcloud = WordCloud(
+                width=800,
+                height=400,
+                background_color='white',
+                colormap=colormaps['viridis']  # Using matplotlib.colormaps
+            ).generate(text)
+            
+            # Generate plot
+            plt.figure(figsize=(8, 5))
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis('off')
+            plt.tight_layout()
+            
+            # Save to base64 string
+            buf = BytesIO()
+            plt.savefig(buf, format='png', dpi=300, bbox_inches='tight')
+            plt.close()
+            return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
+            
+        except Exception as e:
+            print(f"WordCloud generation error: {str(e)}")
+            plt.close()
+            return None
 
     def create_word_frequency_chart(self, text):
         """Create word frequency distribution chart"""
