@@ -1,0 +1,2 @@
+mkdir -p nltk_data/tokenizers
+cp -r ~/nltk_data/tokenizers/punkt nltk_data/tokenizers/
